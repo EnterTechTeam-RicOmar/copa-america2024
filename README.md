@@ -103,3 +103,95 @@ Proyecto Enter Tech School, para esarrollar una aplicación interactiva para la 
 
 - **Fecha y Hora de la Práctica**:
   - Coordinar con el instructor y programar una reunión para la práctica de la presentación.
+
+# Modelo de Dominio
+
+### Entidades y Relaciones
+
+#### Entidades
+
+1. **Usuario**
+   - `id`: entero (autoincremental)
+   - `nombre`: string
+   - `email`: string
+   - `contraseña`: string
+   - `puntos`: entero
+   - `rol`: string (admin, usuario)
+
+2. **Predicción**
+   - `id`: entero (autoincremental)
+   - `usuario_id`: entero (referencia a Usuario)
+   - `partido_id`: entero (referencia a Partido)
+   - `prediccion_local`: entero
+   - `prediccion_visitante`: entero
+   - `puntos_obtenidos`: entero
+
+3. **Partido**
+   - `id`: entero (autoincremental)
+   - `equipo_local`: string
+   - `equipo_visitante`: string
+   - `fecha`: datetime
+   - `resultado_local`: entero
+   - `resultado_visitante`: entero
+
+4. **Clasificación**
+   - `id`: entero (autoincremental)
+   - `usuario_id`: entero (referencia a Usuario)
+   - `posicion`: entero
+
+#### Relaciones
+
+- Un **Usuario** puede hacer muchas **Predicciones**.
+- Una **Predicción** pertenece a un **Usuario** y a un **Partido**.
+- Un **Partido** puede tener muchas **Predicciones**.
+- Una **Clasificación** está asociada a un **Usuario**.
+
+### Funciones/Métodos y su Interacción con las Entidades
+
+1. **Registro de Usuario**: Crea una nueva entidad `Usuario`.
+2. **Inicio de Sesión**: Verifica las credenciales del `Usuario`.
+3. **Hacer Predicción**: Crea una nueva entidad `Predicción` asociada a un `Usuario` y un `Partido`.
+4. **Actualizar Resultados**: Actualiza los resultados de un `Partido` y calcula los puntos obtenidos para cada `Predicción` asociada.
+5. **Generar Clasificación**: Calcula y actualiza la `Clasificación` de los `Usuarios` basado en sus puntos acumulados.
+
+### Diagrama del Modelo de Dominio
+
+```mermaid
+classDiagram
+    class Usuario {
+        int id
+        string nombre
+        string email
+        string contraseña
+        int puntos
+        string rol
+    }
+    
+    class Predicción {
+        int id
+        int usuario_id
+        int partido_id
+        int prediccion_local
+        int prediccion_visitante
+        int puntos_obtenidos
+    }
+    
+    class Partido {
+        int id
+        string equipo_local
+        string equipo_visitante
+        datetime fecha
+        int resultado_local
+        int resultado_visitante
+    }
+    
+    class Clasificación {
+        int id
+        int usuario_id
+        int posicion
+    }
+    
+    Usuario "1" --> "0..*" Predicción: hace
+    Predicción "0..*" --> "1" Partido: pertenece a
+    Partido "1" --> "0..*" Predicción: tiene
+    Clasificación "1" --> "1" Usuario: pertenece a
