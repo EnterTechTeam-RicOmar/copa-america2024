@@ -138,8 +138,6 @@ const partido_22 = new Partido("01-07", "grupos", bolivia, panama);
 const partido_23 = new Partido("02-07", "grupos", brasil, colombia);
 const partido_24 = new Partido("02-07", "grupos", costaRica, paraguay);
 
-// Partidos en fase de llaves
-
 const A1 = grupo_A.ordenar()[0];
 const A2 = grupo_A.ordenar()[1];
 const B1 = grupo_B.ordenar()[0];
@@ -149,6 +147,8 @@ const C2 = grupo_C.ordenar()[1];
 const D1 = grupo_D.ordenar()[0];
 const D2 = grupo_C.ordenar()[1];
 
+// Partidos en fase de llaves
+
 const cuartos1 = new Partido("04-07", "llaves", A1, B2);
 const cuartos2 = new Partido("05-07", "llaves", B1, A2);
 const cuartos3 = new Partido("06-07", "llaves", C1, D2);
@@ -157,4 +157,4 @@ const cuartos4 = new Partido("06-07", "llaves", C1, D2);
 const semis1 = new Partido("10-07", "llaves", cuartos1.resultado, cuartos2.resultado);
 const semis2 = new Partido("10-07", "llaves", cuartos3.resultado, cuartos4.resultado);
 
-const final = new Partido();
+const final = new Partido("14-07", "llaves", semis1.resultado, semis2.resultado);
