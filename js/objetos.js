@@ -68,26 +68,32 @@ Partido.prototype.jugar = function(marcador_A, marcador_B, penales_A = null, pen
     this.equipo_B.diferencia = this.equipo_B.goles_favor-this.equipo_B.goles_contra
 }
 
+// EQUIPOS Y GRUPOS
+
 const argentina = new Equipo("Argentina", "A");
 const canada = new Equipo("Canada", "A");
 const peru = new Equipo("Perú", "A");
 const chile = new Equipo("Chile", "A");
 const grupo_A = new Grupo("A", argentina, canada, peru, chile);
 
-const partido1 = new Partido("2024-06-21", "Grupos", argentina, canada);
-const partido2 = new Partido("2024-06-21", "Grupos", peru, chile);
-const partido3 = new Partido("2024-06-21", "Grupos", peru, canada);
-const partido4 = new Partido("2024-06-21", "Grupos", argentina, chile);
+const ecuador = new Equipo("Ecuador", "B");
+const jamaica = new Equipo("Jamaica", "B");
+const mexico = new Equipo("Mexico", "B");
+const venezuela = new Equipo("Venezuela", "B");
+const grupo_B = new Grupo("B", ecuador, jamaica, mexico, venezuela)
 
-partido1.jugar(2, 2);
-partido2.jugar(3, 0);
-partido3.jugar(3, 2);
-partido4.jugar(0, 5);
+const bolivia = new Equipo("Bolivia", "C");
+const eeuu = new Equipo("Estados Unidos", "C");
+const panama = new Equipo("Panama", "C");
+const uruguay = new Equipo("Uruguay", "C");
+const grupo_C = new Grupo("C", bolivia, eeuu, panama, uruguay)
 
-/*console.log(argentina);
-console.log(canada);
-console.log(partido1.resultado);
+const brasil = new Equipo("Brasil", "D");
+const colombia = new Equipo("Colombia", "D");
+const costaRica = new Equipo("Costa Rica", "D");
+const paraguay = new Equipo("Paraguay", "D");
+const grupo_D = new Grupo("D", ecuador, jamaica, mexico, venezuela)
 
-partido1.jugar(partido1.marcador_A, partido1.marcador_B);*/
+// Partidos
 
-console.log(grupo_A.ordenar());
+const partido_1 = new Partido();
