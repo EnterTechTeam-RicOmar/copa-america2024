@@ -49,26 +49,26 @@ Partido.prototype.jugar = function(marcador_A, marcador_B, penales_A = null, pen
     
     if (this.fase == "llaves") {
         if (marcador_A>marcador_B){
-            this.resultado = `Ganador ${this.equipo_A.nombre}`; 
+            this.resultado = this.equipo_A;
         }
         if (marcador_A<marcador_B){
-            this.resultado = `Ganador ${this.equipo_B.nombre}`; 
+            this.resultado = this.equipo_B;
         }
         if (penales_A > penales_B) {
-            this.resultado = `Ganador ${this.equipo_A.nombre}`;
+            this.resultado = this.equipo_A;
         }
         if (penales_A < penales_B) {
-            this.resultado = `Ganador ${this.equipo_B.nombre}`;
+            this.resultado = this.equipo_B;
         }
     }
     if (this.fase == "grupos") {
         if (marcador_A>marcador_B){
             this.equipo_A.puntos+=3
-            this.resultado = `Ganador ${this.equipo_A.nombre}`; 
+            this.resultado = this.equipo_A; 
         }
         if (marcador_A<marcador_B){
             this.equipo_B.puntos+=3
-            this.resultado = `Ganador ${this.equipo_B.nombre}`; 
+            this.resultado = this.equipo_B; 
         }
         if (marcador_A==marcador_B){
             this.equipo_A.puntos+=1
@@ -83,7 +83,6 @@ Partido.prototype.jugar = function(marcador_A, marcador_B, penales_A = null, pen
         this.equipo_A.diferencia = this.equipo_A.goles_favor-this.equipo_A.goles_contra
         this.equipo_B.diferencia = this.equipo_B.goles_favor-this.equipo_B.goles_contra
     }
-    
 }
 
 // EQUIPOS Y GRUPOS
@@ -118,8 +117,8 @@ const partido_1 = new Partido("20-06", "grupos", argentina, canada);
 const partido_2 = new Partido("21-06", "grupos", peru, chile);
 const partido_3 = new Partido("22-06", "grupos", mexico, jamaica);
 const partido_4 = new Partido("22-06", "grupos", ecuador, venezuela);
-const partido_5 = new Partido("23-06", "grupos", eeuu, bolivia);
-const partido_6 = new Partido("23-06", "grupos", uruguay, panama);
+const partido_6 = new Partido("23-06", "grupos", eeuu, bolivia);
+const partido_5 = new Partido("23-06", "grupos", uruguay, panama);
 const partido_7 = new Partido("24-06", "grupos", brasil, costaRica);
 const partido_8 = new Partido("24-06", "grupos", colombia, paraguay);
 const partido_9 = new Partido("25-06", "grupos", chile, argentina);
@@ -130,13 +129,32 @@ const partido_13 = new Partido("27-06", "grupos", panama, eeuu);
 const partido_14 = new Partido("27-06", "grupos", uruguay, bolivia);
 const partido_15 = new Partido("28-06", "grupos", paraguay, brasil);
 const partido_16 = new Partido("28-06", "grupos", colombia, costaRica);
-const partido_17 = new Partido("28-06", "grupos", colombia, costaRica);
-const partido_18 = new Partido("29-06", "grupos", argentina, peru);
-const partido_19 = new Partido("29-06", "grupos", canada, chile);
-const partido_20 = new Partido("30-06", "grupos", mexico, ecuador);
-const partido_21 = new Partido("30-06", "grupos", jamaica, venezuela);
-const partido_22 = new Partido("01-07", "grupos", eeuu, uruguay);
-const partido_23 = new Partido("01-07", "grupos", bolivia, panama);
-const partido_24 = new Partido("02-07", "grupos", brasil, colombia);
-const partido_25 = new Partido("02-07", "grupos", costaRica, paraguay);
+const partido_17 = new Partido("29-06", "grupos", argentina, peru);
+const partido_18 = new Partido("29-06", "grupos", canada, chile);
+const partido_19 = new Partido("30-06", "grupos", mexico, ecuador);
+const partido_20 = new Partido("30-06", "grupos", jamaica, venezuela);
+const partido_21 = new Partido("01-07", "grupos", eeuu, uruguay);
+const partido_22 = new Partido("01-07", "grupos", bolivia, panama);
+const partido_23 = new Partido("02-07", "grupos", brasil, colombia);
+const partido_24 = new Partido("02-07", "grupos", costaRica, paraguay);
 
+// Partidos en fase de llaves
+
+const A1 = grupo_A.ordenar()[0];
+const A2 = grupo_A.ordenar()[1];
+const B1 = grupo_B.ordenar()[0];
+const B2 = grupo_B.ordenar()[1];
+const C1 = grupo_C.ordenar()[0];
+const C2 = grupo_C.ordenar()[1];
+const D1 = grupo_D.ordenar()[0];
+const D2 = grupo_C.ordenar()[1];
+
+const cuartos1 = new Partido("04-07", "llaves", A1, B2);
+const cuartos2 = new Partido("05-07", "llaves", B1, A2);
+const cuartos3 = new Partido("06-07", "llaves", C1, D2);
+const cuartos4 = new Partido("06-07", "llaves", C1, D2);
+
+const semis1 = new Partido("10-07", "llaves", cuartos1.resultado, cuartos2.resultado);
+const semis2 = new Partido("10-07", "llaves", cuartos3.resultado, cuartos4.resultado);
+
+const final = new Partido();
