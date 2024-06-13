@@ -46,26 +46,44 @@ Grupo.prototype.ordenar = function(){
 }
 
 Partido.prototype.jugar = function(marcador_A, marcador_B, penales_A = null, penales_B = null){
-    if (marcador_A>marcador_B){
-        this.equipo_A.puntos+=3
-        this.resultado = `Ganador ${this.equipo_A.nombre}`; 
+    
+    if (this.fase == "llaves") {
+        if (marcador_A>marcador_B){
+            this.resultado = `Ganador ${this.equipo_A.nombre}`; 
+        }
+        if (marcador_A<marcador_B){
+            this.resultado = `Ganador ${this.equipo_B.nombre}`; 
+        }
+        if (penales_A > penales_B) {
+            this.resultado = `Ganador ${this.equipo_A.nombre}`;
+        }
+        if (penales_A < penales_B) {
+            this.resultado = `Ganador ${this.equipo_B.nombre}`;
+        }
     }
-    if (marcador_A<marcador_B){
-        this.equipo_B.puntos+=3
-        this.resultado = `Ganador ${this.equipo_B.nombre}`; 
+    if (this.fase == "grupos") {
+        if (marcador_A>marcador_B){
+            this.equipo_A.puntos+=3
+            this.resultado = `Ganador ${this.equipo_A.nombre}`; 
+        }
+        if (marcador_A<marcador_B){
+            this.equipo_B.puntos+=3
+            this.resultado = `Ganador ${this.equipo_B.nombre}`; 
+        }
+        if (marcador_A==marcador_B){
+            this.equipo_A.puntos+=1
+            this.equipo_B.puntos+=1
+            this.resultado = `Empate`;
+        }
+        this.equipo_A.goles_favor+=marcador_A
+        this.equipo_B.goles_favor+=marcador_B
+        this.equipo_A.goles_contra+=marcador_B
+        this.equipo_B.goles_contra+=marcador_A
+    
+        this.equipo_A.diferencia = this.equipo_A.goles_favor-this.equipo_A.goles_contra
+        this.equipo_B.diferencia = this.equipo_B.goles_favor-this.equipo_B.goles_contra
     }
-    if (marcador_A==marcador_B){
-        this.equipo_A.puntos+=1
-        this.equipo_B.puntos+=1
-        this.resultado = `Empate`;
-    }
-    this.equipo_A.goles_favor+=marcador_A
-    this.equipo_B.goles_favor+=marcador_B
-    this.equipo_A.goles_contra+=marcador_B
-    this.equipo_B.goles_contra+=marcador_A
-
-    this.equipo_A.diferencia = this.equipo_A.goles_favor-this.equipo_A.goles_contra
-    this.equipo_B.diferencia = this.equipo_B.goles_favor-this.equipo_B.goles_contra
+    
 }
 
 // EQUIPOS Y GRUPOS
@@ -94,6 +112,31 @@ const costaRica = new Equipo("Costa Rica", "D");
 const paraguay = new Equipo("Paraguay", "D");
 const grupo_D = new Grupo("D", ecuador, jamaica, mexico, venezuela)
 
-// Partidos
+// Partidos en fase de grupos
 
-const partido_1 = new Partido();
+const partido_1 = new Partido("20-06", "grupos", argentina, canada);
+const partido_2 = new Partido("21-06", "grupos", peru, chile);
+const partido_3 = new Partido("22-06", "grupos", mexico, jamaica);
+const partido_4 = new Partido("22-06", "grupos", ecuador, venezuela);
+const partido_5 = new Partido("23-06", "grupos", eeuu, bolivia);
+const partido_6 = new Partido("23-06", "grupos", uruguay, panama);
+const partido_7 = new Partido("24-06", "grupos", brasil, costaRica);
+const partido_8 = new Partido("24-06", "grupos", colombia, paraguay);
+const partido_9 = new Partido("25-06", "grupos", chile, argentina);
+const partido_10 = new Partido("25-06", "grupos", peru, canada);
+const partido_11 = new Partido("26-06", "grupos", venezuela, mexico);
+const partido_12 = new Partido("26-06", "grupos", ecuador, jamaica);
+const partido_13 = new Partido("27-06", "grupos", panama, eeuu);
+const partido_14 = new Partido("27-06", "grupos", uruguay, bolivia);
+const partido_15 = new Partido("28-06", "grupos", paraguay, brasil);
+const partido_16 = new Partido("28-06", "grupos", colombia, costaRica);
+const partido_17 = new Partido("28-06", "grupos", colombia, costaRica);
+const partido_18 = new Partido("29-06", "grupos", argentina, peru);
+const partido_19 = new Partido("29-06", "grupos", canada, chile);
+const partido_20 = new Partido("30-06", "grupos", mexico, ecuador);
+const partido_21 = new Partido("30-06", "grupos", jamaica, venezuela);
+const partido_22 = new Partido("01-07", "grupos", eeuu, uruguay);
+const partido_23 = new Partido("01-07", "grupos", bolivia, panama);
+const partido_24 = new Partido("02-07", "grupos", brasil, colombia);
+const partido_25 = new Partido("02-07", "grupos", costaRica, paraguay);
+
