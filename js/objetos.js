@@ -19,7 +19,8 @@ function Partido(fecha, fase, equipo_A, equipo_B, marcador_A=null, marcador_B=nu
     this.marcador_B = marcador_B
     this.penales_A = penales_A
     this.penales_B = penales_B
-    this.resultado = "Por Definirse";
+    this.ganador = null;
+    this.perdedor = null;
 }
 
 function Grupo(nombre, equipo1, equipo2, equipo3, equipo4){
@@ -49,31 +50,38 @@ Partido.prototype.jugar = function(marcador_A, marcador_B, penales_A = null, pen
     
     if (this.fase == "llaves") {
         if (marcador_A>marcador_B){
-            this.resultado = this.equipo_A;
+            this.ganador = this.equipo_A;
+            this.perdedor = this.equipo_B;
         }
         if (marcador_A<marcador_B){
-            this.resultado = this.equipo_B;
+            this.ganador = this.equipo_B;
+            this.perdedor = this.equipo_A;
         }
         if (penales_A > penales_B) {
-            this.resultado = this.equipo_A;
+            this.ganador = this.equipo_A;
+            this.perdedor = this.equipo_B;
         }
         if (penales_A < penales_B) {
-            this.resultado = this.equipo_B;
+            this.ganador = this.equipo_B;
+            this.perdedor = this.equipo_A;
         }
     }
     if (this.fase == "grupos") {
         if (marcador_A>marcador_B){
             this.equipo_A.puntos+=3
-            this.resultado = this.equipo_A; 
+            this.ganador = this.equipo_A; 
+            this.perdedor = this.equipo_B; 
         }
         if (marcador_A<marcador_B){
             this.equipo_B.puntos+=3
-            this.resultado = this.equipo_B; 
+            this.ganador = this.equipo_B; 
+            this.perdedor = this.equipo_A; 
         }
         if (marcador_A==marcador_B){
             this.equipo_A.puntos+=1
             this.equipo_B.puntos+=1
-            this.resultado = `Empate`;
+            this.ganador = `Empate`;
+            this.perdedor = `Empate`;
         }
         this.equipo_A.goles_favor+=marcador_A
         this.equipo_B.goles_favor+=marcador_B
@@ -154,7 +162,9 @@ const cuartos2 = new Partido("05-07", "llaves", B1, A2);
 const cuartos3 = new Partido("06-07", "llaves", C1, D2);
 const cuartos4 = new Partido("06-07", "llaves", C1, D2);
 
-const semis1 = new Partido("10-07", "llaves", cuartos1.resultado, cuartos2.resultado);
-const semis2 = new Partido("10-07", "llaves", cuartos3.resultado, cuartos4.resultado);
+const semis1 = new Partido("10-07", "llaves", cuartos1.ganador, cuartos2.ganador);
+const semis2 = new Partido("10-07", "llaves", cuartos3.ganador, cuartos4.ganador);
 
-const final = new Partido("14-07", "llaves", semis1.resultado, semis2.resultado);
+const tercerPuesto = new Partido("13-07", "llaves", semis1.perdedor, semis2.perdedor)
+
+const final = new Partido("14-07", "llaves", semis1.ganador, semis2.ganador);
