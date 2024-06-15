@@ -168,3 +168,84 @@ const semis2 = new Partido("10-07", "llaves", cuartos3.ganador, cuartos4.ganador
 const tercerPuesto = new Partido("13-07", "llaves", semis1.perdedor, semis2.perdedor)
 
 const final = new Partido("14-07", "llaves", semis1.ganador, semis2.ganador);
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderGrupos();
+    renderEncuentros();
+});
+
+function renderGrupos() {
+    const grupos = [grupo_A, grupo_B, grupo_C, grupo_D];
+    const tablaGruposDiv = document.getElementById('tablaGrupos');
+
+    grupos.forEach(grupo => {
+        const table = document.createElement('table');
+        table.classList.add('tabla-grupo');
+        
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+            <tr>
+                <th>Grupo</th>
+                <th>Equipo</th>
+            </tr>
+        `;
+        
+        const tbody = document.createElement('tbody');
+        const equipos = grupo.ordenar();
+
+        equipos.forEach(equipo => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${equipo.grupo}</td>
+                <td>${equipo.nombre}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        tablaGruposDiv.appendChild(table);
+    });
+}
+
+function renderEncuentros() {
+    const partidos = [partido_1, partido_2, partido_3, partido_2, partido_4, partido_2, partido_5, partido_6, partido_7, 
+        partido_8, partido_9, partido_10, partido_11, partido_12, partido_13, partido_14, partido_15, partido_16, 
+        partido_17, partido_18, partido_19, partido_20, partido_21, partido_22, partido_23, partido_24];
+    const tablaGruposDiv = document.getElementById('tablaGrupos');
+
+    partidos.forEach(partido => {
+        const table = document.createElement('table');
+        table.classList.add('tabla-grupo');
+        
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+            <tr>
+                <th>Fecha</th>
+                <th>Fase</th>
+                <th>Grupo</th>
+                <th>Equipo 1</th>
+                <th>Equipo 2</th>
+                <th>Marcador 1</th>
+                <th>Marcador 2</th>
+                <th>Resultado</th>
+            </tr>
+        `;
+        
+        const tbody = document.createElement('tbody');
+        const equipos = partido.ordenar();
+
+        equipos.forEach(equipo => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${equipo.grupo}</td>
+                <td>${equipo.nombre}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        tablaGruposDiv.appendChild(table);
+    });
+}
