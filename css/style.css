@@ -5,3 +5,15 @@
     --deepGreen: #025918;
     --emerald: #038C17;
 }
+
+.tablaGrupo {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tablaGrupo th,
+.tablaGrupo td {
+    border: 2px solid black;
+    padding: 8px;
+    text-align: center;
+}
