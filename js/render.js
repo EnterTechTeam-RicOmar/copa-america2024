@@ -321,6 +321,8 @@ function mostrarGrupos() {
           <th>Equipo 2</th>
           <th>Marcador 1</th>
           <th>Marcador 2</th>
+          <th>Penales 1</th>
+            <th>Penales 2</th>
           <th>Resultado</th>
         </tr>
     `;
@@ -334,6 +336,8 @@ function mostrarGrupos() {
           <td>${partido.equipo_B.nombre}</td>
           <td><input type="number" min="0" id="marcador_A_${index}" onchange="actualizarResultadoCuartos(${index})" value="${partido.marcador_A !== null ? partido.marcador_A : ''}"/></td>
           <td><input type="number" min="0" id="marcador_B_${index}" onchange="actualizarResultadoCuartos(${index})" value="${partido.marcador_B !== null ? partido.marcador_B : ''}"/></td>
+            <td>${partido.fase === 'cuartos' ? `<input type="number" min="0" id="penales_A_${index}" onchange="actualizarResultado(${index})" value="${partido.penales_A !== null ? partido.penales_A : ''}"/>` : ''}</td>
+            <td>${partido.fase === 'cuartos' ? `<input type="number" min="0" id="penales_B_${index}" onchange="actualizarResultado(${index})" value="${partido.penales_B !== null ? partido.penales_B : ''}"/>` : ''}</td>
           <td id="resultado_cuartos_${index}">${partido.jugado ? (partido.ganador() ? partido.ganador().nombre : 'Empate') : 'No jugado'}</td>
         </tr>
       `;
