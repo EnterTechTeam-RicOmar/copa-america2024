@@ -24,10 +24,9 @@ Equipo.prototype.reiniciar = function () {
   this.partidos_perdidos = 0;
 };
 
-function Partido(id, fecha, fase, equipo_A, equipo_B, grupo = null, marcador_A = null, marcador_B = null, penales_A = null, penales_B = null) {
+function Partido(id, fecha, equipo_A, equipo_B, grupo = null, marcador_A = null, marcador_B = null, penales_A = null, penales_B = null, jugado = false) {
   this.id = id;
   this.fecha = fecha;
-  this.fase = fase;
   this.equipo_A = equipo_A;
   this.equipo_B = equipo_B;
   this.grupo = grupo;
@@ -35,7 +34,7 @@ function Partido(id, fecha, fase, equipo_A, equipo_B, grupo = null, marcador_A =
   this.marcador_B = marcador_B;
   this.penales_A = penales_A;
   this.penales_B = penales_B;
-  this.jugado = false;
+  this.jugado = jugado;
 }
 
 Partido.prototype.ganador = function () {
@@ -56,13 +55,13 @@ Partido.prototype.perdedor = function () {
   return null;
 };
 
-function Grupo(nombre, equipo1, equipo2, equipo3, equipo4) {
+function Grupo(nombre, equipo1, equipo2, equipo3, equipo4, partidos = []) {
   this.nombre = nombre;
   this.equipo1 = equipo1;
   this.equipo2 = equipo2;
   this.equipo3 = equipo3;
   this.equipo4 = equipo4;
-  this.partidos = [];
+  this.partidos = partidos;
 }
 
 Grupo.prototype.puntuar = function () {
@@ -116,11 +115,11 @@ Grupo.prototype.ordenar = function () {
   return equipos;
 };
 
-Partido.prototype.jugar = function (marcador_A, marcador_B) {
+Partido.prototype.jugar = function (marcador_A, marcador_B, penales_A = null, penales_B = null) {
     this.marcador_A = marcador_A;
     this.marcador_B = marcador_B;
   
-    if (this.fase === "grupos") {
+    if (this.grupo) {
       if (!this.jugado) {
         this.grupo.partidos.push(this);
         this.jugado = true;
@@ -136,31 +135,35 @@ Partido.prototype.jugar = function (marcador_A, marcador_B) {
       this.grupo.ordenar();
     } else {
       this.jugado = true;
+      this.penales_A = penales_A;
+      this.penales_B = penales_B;
     }
   };
-
-Partido.prototype.jugarllaves = function ( marcador_A, marcador_B, penales_A = null, penales_B = null) {
-    this.marcador_A = marcador_A;
-    this.marcador_B = marcador_B;
-    this.penales_A = penales_A;
-    this.penales_B = penales_B;
-    if (this.fase === "grupos") {
-      if (!this.jugado) {
-        this.grupo.partidos.push(this);
-        this.jugado = true;
-      } else {
-        const thisPartido = this;
-        this.grupo.partidos.map((partido) => {
-          if (partido.id === thisPartido.id) {
-            Object.assign(partido, thisPartido);
-          }
-        });
-      }
-      this.grupo.puntuar();
-      this.grupo.ordenar();
-    } else {
-      this.jugado = true;
-    }
-  };
-
   
+  Partido.prototype.replaceGrupo = function () {
+    this.grupo = {
+      nombre: this.grupo.nombre,
+      equipo1: this.grupo.equipo1,
+      equipo2: this.grupo.equipo2,
+      equipo3: this.grupo.equipo3,
+      equipo4: this.grupo.equipo4,
+    };
+    return this;
+  }
+
+  Grupo.prototype.reiniciarPartidos = function () {
+    this.partidos = [];
+    return this;
+  }
+
+  function deepCloneWithoutCircularReferences(grupo) {
+    const clonedGrupo = JSON.parse(JSON.stringify(grupo));
+    
+    // Remover referencias circulares en la copia clonada
+    clonedGrupo.partidos = clonedGrupo.partidos.map(partido => {
+      delete partido.grupo;
+      return partido;
+    });
+  
+    return clonedGrupo;
+  }

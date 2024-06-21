@@ -212,9 +212,12 @@ const partido_cuartos_1 = new Partido("01-07", "llaves", A1, B2);
 const partido_cuartos_2 = new Partido("01-07", "llaves", B1, A2);
 const partido_cuartos_3 = new Partido("02-07", "llaves", C1, D2);
 const partido_cuartos_4 = new Partido("02-07", "llaves", D1, C2);
+
 const semis1 = new Partido("10-07", "llaves", partido_cuartos_1.ganador, partido_cuartos_2.ganador);
 const semis2 = new Partido("10-07", "llaves", partido_cuartos_3.ganador, partido_cuartos_4.ganador);
+
 const tercerPuesto = new Partido("13-07", "llaves", semis1.perdedor, semis2.perdedor);
+
 const final = new Partido("14-07", "llaves", semis1.ganador, semis2.ganador);
 
 const partidos_llaves = [partido_cuartos_1, partido_cuartos_2, partido_cuartos_3, partido_cuartos_4, semis1, semis2, tercerPuesto, final];
@@ -404,15 +407,11 @@ function mostrarLlaves(partidosLlaves) {
 mostrarGrupos();
 mostrarEncuentros();
 
-
-
 document.getElementById('posiciones-button').addEventListener('click', mostrarPosiciones);
 document.getElementById('llaves-button').addEventListener('click', () => mostrarLlaves(partidos_llaves));
 document.getElementById('reiniciar-button').addEventListener('click', () => {
     location.reload();  // Reinicia la aplicación recargando la página
 });
-
-
 
 // Partidos en fase de llaves
 const partido_cuartos_1 = new Partido("01-07", "llaves", argentina, ecuador);
@@ -443,4 +442,4 @@ const tercerPuesto = new Partido("13-07", "llaves", semis1.perdedor, semis2.perd
 const final = new Partido("14-07", "llaves", semis1.ganador, semis2.ganador);
 
 const partidos_llaves = [partido_cuartos_1, partido_cuartos_2, partido_cuartos_3, partido_cuartos_4, semis1.perdedor,
-semis2.perdedor, semis1.ganador, semis2.ganador];
+semis2.perdedor, semis1.ganador, semis2.ganador];*/

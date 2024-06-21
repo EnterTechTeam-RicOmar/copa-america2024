@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,43 +8,44 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <header>
         <h1>Copa America 2024</h1>
         <nav>
             <ul>
-                <li><a href="index.html">Inicio</a></li>            
+                <li><a href="index.html">Inicio</a></li>
                 <li><a href="pages/results.html">Tabla de Resultados</a></li>
                 <li><a href="pages/admin.html">Admin</a></li>
             </ul>
         </nav>
     </header>
-    
+
     <main>
         <section id="inicio">
             <h2>Grupos Copa America</h2>
             <div id="tablaInfo"></div>
         </section>
-        
+        <hr>
+
         <section id="encuentros">
             <h2>Encuentros Fase de Grupos</h2>
             <div id="tablaEncuentros"></div>
         </section>
+        <hr>
 
         <section id="posiciones">
             <h2>Tabla de Posiciones - Fase de Grupos</h2>
             <div id="tablaPosiciones"></div>
-            <button id="posiciones-button">Actualizar y guardar resultados - Tabla posiciones</button>
         </section>
-
+        <hr>
         <section id="llaves">
             <h2>Partidos de Fase de Llaves</h2>
             <div id="tablaLlaves"></div>
-            <button id="llaves-button">Actualizar y guardar resultados - Tabla de llaves</button>
         </section>
         <button id="reiniciar-button">Reiniciar App</button>
     </main>
-    
+
     <footer>
         <p>&copy; Copa America 2024 - EnterTechTeam-RicOmar. Todos los derechos reservados.</p>
     </footer>
@@ -51,4 +53,5 @@
     <script src="js/objetos.js"></script>
     <script src="js/render.js"></script>
 </body>
+
 </html>

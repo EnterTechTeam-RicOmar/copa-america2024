@@ -62,129 +62,148 @@ App.prototype.instanciarGrupos = function () {
 };
 
 App.prototype.instanciarPartidosGrupos = function () {
-    let idPartido = 1;
-    const thisApp = this;
-    const fechasPorGrupo = [
-        ["20-06", "21-06", "25-06", "25-06", "29-06", "29-06"], // Fechas para el primer grupo (Grupo A)
-        ["22-06", "22-06", "26-06", "26-06", "30-06", "30-06"], // Fechas para el segundo grupo (Grupo B)
-        ["23-06", "23-06", "27-06", "27-06", "01-07", "01-07"], // Fechas para el tercer grupo (Grupo C)
-        ["24-06", "24-06", "28-06", "28-06", "02-07", "02-07"]  // Fechas para el cuarto grupo (Grupo D)
-    ];
+  const thisApp = this;
+  let ls_app = localStorage.getItem('app');
+  if (ls_app) {
+    ls_app = JSON.parse(ls_app);
+    const ls_partidosGrupos = ls_app;
+    ls_partidosGrupos.forEach(partido => {
+      const partidoGrupo = thisApp.grupos.find(grupo => {
+        return partido.grupo === grupo.nombre;
+      });
+      const partidoObjeto = new Partido(
+        partido.id,
+        partido.fecha,
+        partido.equipo_A,
+        partido.equipo_B,
+        partidoGrupo,
+        partido.marcador_A,
+        partido.marcador_B,
+        partido.penales_A,
+        partido.penales_B,
+        partido.jugado,
+      );
 
-    this.grupos.forEach((grupo, grupoIndex) => {
-        const fechas = fechasPorGrupo[grupoIndex];
-        thisApp.partidosGrupos.push(
-            new Partido(
-                idPartido,
-                fechas[0],
-                "grupos",
-                grupo.equipo1,
-                grupo.equipo2,
-                grupo
-            )
-        );
-        thisApp.partidosGrupos.push(
-            new Partido(
-                idPartido + 1,
-                fechas[1],
-                "grupos",
-                grupo.equipo3,
-                grupo.equipo4,
-                grupo
-            )
-        );
-        thisApp.partidosGrupos.push(
-            new Partido(
-                idPartido + 2,
-                fechas[2],
-                "grupos",
-                grupo.equipo3,
-                grupo.equipo2,
-                grupo
-            )
-        );
-        thisApp.partidosGrupos.push(
-            new Partido(
-                idPartido + 3,
-                fechas[3],
-                "grupos",
-                grupo.equipo4,
-                grupo.equipo1,
-                grupo
-            )
-        );
-        thisApp.partidosGrupos.push(
-            new Partido(
-                idPartido + 4,
-                fechas[4],
-                "grupos",
-                grupo.equipo1,
-                grupo.equipo3,
-                grupo
-            )
-        );
-        thisApp.partidosGrupos.push(
-            new Partido(
-                idPartido + 5,
-                fechas[5],
-                "grupos",
-                grupo.equipo2,
-                grupo.equipo4,
-                grupo
-            )
-        );
-        idPartido = idPartido + 6; // Incremento de 6 en 6 para asignar IDs únicos a cada grupo de partidos
+      thisApp.partidosGrupos.push(partidoObjeto);
+
     });
+    console.log(thisApp.partidosGrupos);
+    // mostrarGrupos();
+    mostrarEncuentros();
+    mostrarPosiciones();
+    // mostrarLlaves();
+    return;
+  }
+
+  let idPartido = 1;
+
+  const fechasPorGrupo = [
+    ["20-06", "21-06", "25-06", "25-06", "29-06", "29-06"], // Fechas para el primer grupo (Grupo A)
+    ["22-06", "22-06", "26-06", "26-06", "30-06", "30-06"], // Fechas para el segundo grupo (Grupo B)
+    ["23-06", "23-06", "27-06", "27-06", "01-07", "01-07"], // Fechas para el tercer grupo (Grupo C)
+    ["24-06", "24-06", "28-06", "28-06", "02-07", "02-07"]  // Fechas para el cuarto grupo (Grupo D)
+  ];
+
+  this.grupos.forEach((grupo, grupoIndex) => {
+    const fechas = fechasPorGrupo[grupoIndex];
+    thisApp.partidosGrupos.push(
+      new Partido(
+        idPartido,
+        fechas[0],
+        grupo.equipo1,
+        grupo.equipo2,
+        grupo
+      )
+    );
+    thisApp.partidosGrupos.push(
+      new Partido(
+        idPartido + 1,
+        fechas[1],
+        grupo.equipo3,
+        grupo.equipo4,
+        grupo
+      )
+    );
+    thisApp.partidosGrupos.push(
+      new Partido(
+        idPartido + 2,
+        fechas[2],
+        grupo.equipo3,
+        grupo.equipo2,
+        grupo
+      )
+    );
+    thisApp.partidosGrupos.push(
+      new Partido(
+        idPartido + 3,
+        fechas[3],
+        grupo.equipo4,
+        grupo.equipo1,
+        grupo
+      )
+    );
+    thisApp.partidosGrupos.push(
+      new Partido(
+        idPartido + 4,
+        fechas[4],
+        grupo.equipo1,
+        grupo.equipo3,
+        grupo
+      )
+    );
+    thisApp.partidosGrupos.push(
+      new Partido(
+        idPartido + 5,
+        fechas[5],
+        grupo.equipo2,
+        grupo.equipo4,
+        grupo
+      )
+    );
+    idPartido = idPartido + 6; // Incremento de 6 en 6 para asignar IDs únicos a cada grupo de partidos
+  });
 };
 
 App.prototype.instanciarPartidosCuartos = function () {
-    let idPartido = 1;
-    const thisApp = this;
+  let idPartido = 1;
+  const thisApp = this;
+  this.partidosCuartos = [];
 
-    // Actualizar las posiciones de los equipos en cada grupo
-    this.grupos.forEach(grupo => {
-        const equiposOrdenados = grupo.ordenar();
-        grupo.equipo1 = equiposOrdenados[0];
-        grupo.equipo2 = equiposOrdenados[1];
-        grupo.equipo3 = equiposOrdenados[2];
-        grupo.equipo4 = equiposOrdenados[3];
-      });
-    
+  // Obtener los dos primeros equipos de cada grupo ordenados por posición
+  const equiposCuartos = [];
+  this.grupos.forEach((grupo) => {
+    const equiposOrdenados = grupo.ordenar();
+    equiposCuartos.push(equiposOrdenados[0]); // Primer lugar
+    equiposCuartos.push(equiposOrdenados[1]); // Segundo lugar
+  });
 
-    // Obtener los dos primeros equipos de cada grupo ordenados por posición
-    const equiposCuartos = [];
-    this.grupos.forEach((grupo) => {
-        const equiposOrdenados = grupo.ordenar();
-        equiposCuartos.push(equiposOrdenados[0]); // Primer lugar
-        equiposCuartos.push(equiposOrdenados[1]); // Segundo lugar
-    });
+  // Definir los enfrentamientos de cuartos de final según el orden especificado
+  const enfrentamientosCuartos = [
+    [equiposCuartos[0], equiposCuartos[3]], // Grupo A 1° vs Grupo B 2°
+    [equiposCuartos[2], equiposCuartos[1]], // Grupo B 1° vs Grupo A 2°
+    [equiposCuartos[4], equiposCuartos[7]], // Grupo C 1° vs Grupo D 2°
+    [equiposCuartos[6], equiposCuartos[5]]  // Grupo D 1° vs Grupo C 2°
+  ];
 
-    // Definir los enfrentamientos de cuartos de final según el orden especificado
-    const enfrentamientosCuartos = [
-        [equiposCuartos[0], equiposCuartos[3]], // Grupo A 1° vs Grupo B 2°
-        [equiposCuartos[2], equiposCuartos[1]], // Grupo B 1° vs Grupo A 2°
-        [equiposCuartos[4], equiposCuartos[7]], // Grupo C 1° vs Grupo D 2°
-        [equiposCuartos[6], equiposCuartos[5]]  // Grupo D 1° vs Grupo C 2°
-    ];
+  // Definir las fechas para los partidos de cuartos de final
+  const fechasCuartos = ["05-07", "06-07", "07-07", "08-07"];
 
-    // Definir las fechas para los partidos de cuartos de final
-    const fechasCuartos = ["05-07", "06-07", "07-07", "08-07"];
+  // Crear los partidos de cuartos de final
+  enfrentamientosCuartos.forEach((enfrentamiento, index) => {
+    const equipo1 = enfrentamiento[0];
+    const equipo2 = enfrentamiento[1];
+    thisApp.partidosCuartos.push(
+      new Partido(
+        idPartido,
+        fechasCuartos[index],
+        // "cuartos",
+        equipo1,
+        equipo2
+      )
+    );
+    idPartido++;
+  });
 
-    // Crear los partidos de cuartos de final
-    enfrentamientosCuartos.forEach((enfrentamiento, index) => {
-        const equipo1 = enfrentamiento[0];
-        const equipo2 = enfrentamiento[1];
-        thisApp.partidosCuartos.push(
-            new Partido(
-                idPartido,
-                fechasCuartos[index],
-                "cuartos",
-                equipo1,
-                equipo2
-            )
-        );
-        idPartido++;
-    });
 };
 
 const app = new App();
@@ -194,31 +213,31 @@ app.instanciarPartidosGrupos();
 app.instanciarPartidosCuartos();
 
 function mostrarGrupos() {
-    const tablaInfo = document.getElementById("tablaInfo");
-    let gruposHTML = `
+  const tablaInfo = document.getElementById("tablaInfo");
+  let gruposHTML = `
       <table>
         <tr>
           <th>Grupo</th>
           <th>Equipos</th>
         </tr>
     `;
-  
-    app.grupos.forEach((grupo) => {
-      gruposHTML += `
+
+  app.grupos.forEach((grupo) => {
+    gruposHTML += `
         <tr>
           <td>Grupo ${grupo.nombre}</td>
           <td>${grupo.equipo1.nombre}, ${grupo.equipo2.nombre}, ${grupo.equipo3.nombre}, ${grupo.equipo4.nombre}</td>
         </tr>
       `;
-    });
-  
-    gruposHTML += `</table>`;
-    tablaInfo.innerHTML = gruposHTML;
-  }
-  
-  function mostrarEncuentros() {
-    const tablaEncuentros = document.getElementById("tablaEncuentros");
-    let encuentrosHTML = `
+  });
+
+  gruposHTML += `</table>`;
+  tablaInfo.innerHTML = gruposHTML;
+}
+
+function mostrarEncuentros() {
+  const tablaEncuentros = document.getElementById("tablaEncuentros");
+  let encuentrosHTML = `
       <table>
         <caption>Encuentros</caption>
         <tr>
@@ -232,33 +251,41 @@ function mostrarGrupos() {
           <th>Resultado</th>
         </tr>
     `;
-  
-    app.partidosGrupos.forEach((partido, index) => {
-      encuentrosHTML += `
+
+  app.partidosGrupos.forEach((partido, index) => {
+
+    encuentrosHTML += `
         <tr>
           <td>${partido.fecha}</td>
-          <td>${partido.fase}</td>
+          <td>Grupos</td>
           <td>${partido.equipo_A.grupo}</td>
           <td>${partido.equipo_A.nombre}</td>
           <td>${partido.equipo_B.nombre}</td>
           <td><input type="number" min="0" id="marcador_A_${index}" onchange="actualizarResultado(${index})" value="${partido.marcador_A !== null ? partido.marcador_A : ''}"/></td>
           <td><input type="number" min="0" id="marcador_B_${index}" onchange="actualizarResultado(${index})" value="${partido.marcador_B !== null ? partido.marcador_B : ''}"/></td>
-          <td id="resultado_${index}">${partido.jugado ? (partido.ganador() ? partido.ganador().nombre  : 'Empate') : 'Por definirse'}</td>
+          <td id="resultado_${index}">${partido.jugado ? (partido.ganador() ? partido.ganador().nombre : 'Empate') : 'Por definirse'}</td>
         </tr>
       `;
-    });
-  
-    encuentrosHTML += `</table>`;
-    tablaEncuentros.innerHTML = encuentrosHTML;
-  }
-  
-  function mostrarPosiciones() {
-    const tablaPosiciones = document.getElementById("tablaPosiciones");
-    let posicionesHTML = '';
-  
-    app.grupos.forEach((grupo) => {
-      const equiposOrdenados = grupo.ordenar();
-      posicionesHTML += `
+    
+  });
+
+  encuentrosHTML += `</table>`;
+  tablaEncuentros.innerHTML = encuentrosHTML;
+  // app.partidosGrupos.forEach((partido, index)=>{
+  //   if (partido.jugado) {
+  //     partido.jugado = false;
+  //     actualizarResultado(index);
+  //   }
+  // })
+}
+
+function mostrarPosiciones() {
+  const tablaPosiciones = document.getElementById("tablaPosiciones");
+  let posicionesHTML = '';
+
+  app.grupos.forEach((grupo) => {
+    const equiposOrdenados = grupo.ordenar();
+    posicionesHTML += `
         <table>
           <caption>Grupo ${grupo.nombre}</caption>
           <tr>
@@ -274,9 +301,9 @@ function mostrarGrupos() {
             <th>Puntos</th>
           </tr>
       `;
-  
-      equiposOrdenados.forEach((equipo) => {
-        posicionesHTML += `
+
+    equiposOrdenados.forEach((equipo) => {
+      posicionesHTML += `
           <tr>
             <td>${equipo.posicion}</td>
             <td>${equipo.nombre}</td>
@@ -290,28 +317,39 @@ function mostrarGrupos() {
             <td>${equipo.puntos}</td>
           </tr>
         `;
-      });
-  
-      posicionesHTML += `</table>`;
     });
-  
-    tablaPosiciones.innerHTML = posicionesHTML;
-  }
-  
-  function actualizarResultado(index) {
-    const marcador_A = parseInt(document.getElementById(`marcador_A_${index}`).value, 10);
-    const marcador_B = parseInt(document.getElementById(`marcador_B_${index}`).value, 10);
-  
-    const partido = app.partidosGrupos[index];
-    partido.jugar(marcador_A, marcador_B);
-  
-    mostrarEncuentros();
-    mostrarPosiciones();
-  }
 
-  function mostrarLlaves() {
-    const tablaLlaves = document.getElementById("tablaLlaves");
-    let llavesHTML = `
+    posicionesHTML += `</table>`;
+  });
+
+  tablaPosiciones.innerHTML = posicionesHTML;
+}
+
+function actualizarResultado(index) {
+  const marcador_A = parseInt(document.getElementById(`marcador_A_${index}`).value || 0, 10);
+  const marcador_B = parseInt(document.getElementById(`marcador_B_${index}`).value || 0, 10);
+
+  const partido = app.partidosGrupos[index];
+  partido.jugar(marcador_A, marcador_B);
+
+  mostrarEncuentros();
+  mostrarPosiciones();
+  app.instanciarPartidosCuartos();
+  mostrarLlaves();
+
+  const app_partidosGrupos = app.partidosGrupos.map(partido => {
+    let partidoSinGrupo = Object.assign(Object.create(Object.getPrototypeOf(partido)), partido)
+    partidoSinGrupo.grupo = partidoSinGrupo.grupo.nombre;
+    // const { grupo, ...partidoSinGrupo } = partido;
+    return partidoSinGrupo;
+  });
+  console.log(app_partidosGrupos);
+  localStorage.setItem('app', JSON.stringify(app_partidosGrupos));
+}
+
+function mostrarLlaves() {
+  const tablaLlaves = document.getElementById("tablaLlaves");
+  let llavesHTML = `
       <table>
         <caption>Partidos de Cuartos de Final</caption>
         <tr>
@@ -326,12 +364,12 @@ function mostrarGrupos() {
           <th>Resultado</th>
         </tr>
     `;
-  
-    app.partidosCuartos.forEach((partido, index) => {
-      llavesHTML += `
+
+  app.partidosCuartos.forEach((partido, index) => {
+    llavesHTML += `
         <tr>
           <td>${partido.fecha}</td>
-          <td>${partido.fase}</td>
+          <td>Cuartos de Final</td>
           <td>${partido.equipo_A.nombre}</td>
           <td>${partido.equipo_B.nombre}</td>
           <td><input type="number" min="0" id="marcador_A_${index}" onchange="actualizarResultadoCuartos(${index})" value="${partido.marcador_A !== null ? partido.marcador_A : ''}"/></td>
@@ -341,26 +379,25 @@ function mostrarGrupos() {
           <td id="resultado_cuartos_${index}">${partido.jugado ? (partido.ganador() ? partido.ganador().nombre : 'Empate') : 'No jugado'}</td>
         </tr>
       `;
-    });
-  
-    llavesHTML += `</table>`;
-    tablaLlaves.innerHTML = llavesHTML;
-  }
-
-  function actualizarResultadoCuartos(index) {
-    const marcador_A = parseInt(document.getElementById(`marcador_A_${index}`).value, 10);
-    const marcador_B = parseInt(document.getElementById(`marcador_B_${index}`).value, 10);
-  
-    const partido = app.partidosCuartos[index];
-    partido.jugar(marcador_A, marcador_B);
-  
-    mostrarLlaves();
-  }
-  
-  // Renderizar las tablas al cargar la página
-  document.addEventListener("DOMContentLoaded", () => {
-    mostrarGrupos();
-    mostrarEncuentros();
-    mostrarPosiciones();
-    mostrarLlaves();
   });
+
+  llavesHTML += `</table>`;
+  tablaLlaves.innerHTML = llavesHTML;
+}
+
+function actualizarResultadoCuartos(index) {
+  const marcador_A = parseInt(document.getElementById(`marcador_A_${index}`).value, 10);
+  const marcador_B = parseInt(document.getElementById(`marcador_B_${index}`).value, 10);
+
+  const partido = app.partidosCuartos[index];
+  partido.jugar(marcador_A, marcador_B);
+
+  mostrarLlaves();
+}
+
+// Renderizar las tablas al cargar la página
+
+mostrarGrupos();
+mostrarEncuentros();
+mostrarPosiciones();
+mostrarLlaves();
