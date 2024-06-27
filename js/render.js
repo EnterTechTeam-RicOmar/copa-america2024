@@ -395,6 +395,31 @@ function actualizarResultadoCuartos(index) {
   mostrarLlaves();
 }
 
+function reiniciar() {
+  // Lógica para reiniciar o limpiar los datos de cada partido
+  app.partidosGrupos.forEach(partido => {
+      // Aquí realizas las operaciones necesarias para reiniciar cada objeto partido
+      // Por ejemplo, podrías reiniciar marcadores, flags de jugado, etc.
+      partido.marcador_A = null;
+      partido.marcador_B = null;
+      partido.penales_A = null;
+      partido.penales_B = null;
+      partido.jugado = false;
+  });
+  
+  // Actualizar las tablas después del reinicio
+  mostrarEncuentros(); // Actualizar la tabla de encuentros después del reinicio
+  mostrarPosiciones(); // Actualizar la tabla de posiciones después del reinicio
+  mostrarLlaves(); // Actualizar las llaves después del reinicio si es necesario
+}
+
+const reiniciarButton = document.getElementById('reiniciar-button');
+
+// Agregar evento de clic al botón
+reiniciarButton.addEventListener('click', function() {
+    reiniciar(); // Llama a la función reiniciar() cuando se hace clic en el botón
+});
+
 // Renderizar las tablas al cargar la página
 
 mostrarGrupos();
