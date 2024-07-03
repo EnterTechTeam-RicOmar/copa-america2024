@@ -1,7 +1,7 @@
 "use strict";
 
-function Equipo(grupo, nombre, posicion = 1, partidos_jugados = 0, partidos_ganados = 0, partidos_empatados = 0, partidos_perdidos = 0, goles_favor = 0, goles_contra = 0, puntos = 0) {
-  this.grupo = grupo;
+function Equipo(grupo_nombre, nombre, posicion = 1, partidos_jugados = 0, partidos_ganados = 0, partidos_empatados = 0, partidos_perdidos = 0, goles_favor = 0, goles_contra = 0, puntos = 0) {
+  this.grupo_nombre = grupo_nombre;
   this.posicion = posicion;
   this.nombre = nombre;
   this.partidos_jugados = partidos_jugados;
@@ -24,17 +24,59 @@ Equipo.prototype.reiniciar = function () {
   this.partidos_perdidos = 0;
 };
 
-function Partido(id, fecha, equipo_A, equipo_B, grupo = null, marcador_A = null, marcador_B = null, penales_A = null, penales_B = null, jugado = false) {
+function Partido(id, fecha, equipo_A, equipo_B, grupo_nombre = null, marcador_A = null, marcador_B = null, jugado = false) {
   this.id = id;
   this.fecha = fecha;
   this.equipo_A = equipo_A;
   this.equipo_B = equipo_B;
-  this.grupo = grupo;
+  this.grupo_nombre = grupo_nombre;
   this.marcador_A = marcador_A;
   this.marcador_B = marcador_B;
-  this.penales_A = penales_A;
-  this.penales_B = penales_B;
   this.jugado = jugado;
+}
+
+Partido.prototype.renderTableRow = function (getGrupoByName) {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+                <td>${this.fecha}</td>
+                <td>Grupos</td>
+                <td>${this.equipo_A.grupo_nombre}</td>
+                <td>${this.equipo_A.nombre}</td>
+                <td>${this.equipo_B.nombre}</td>
+                <td><input type="number" min="0" role="A" value="${this.marcador_A !== null ? this.marcador_A : ''}"/></td>
+                <td><input type="number" min="0" role="B" value="${this.marcador_B !== null ? this.marcador_B : ''}"/></td>
+                <td>${this.jugado ? (this.ganador() ? this.ganador().nombre : 'Empate') : 'Por definirse'}</td>
+            `;
+  const inputA = tr.querySelector("input[role=A]");
+  const inputB = tr.querySelector("input[role=B]");
+  
+  const grupo = getGrupoByName(this.grupo_nombre);
+  console.log(grupo);
+  
+  const thisPartido = this;
+  inputA.addEventListener("change", function (e) {
+    let marcador_A = this.value || 0;
+    let marcador_B = inputB.value || 0;
+
+    marcador_A = Number.parseInt(marcador_A);
+    marcador_B = Number.parseInt(marcador_B);
+
+    thisPartido.jugar(grupo, marcador_A, marcador_B);
+    thisPartido.updateLocalStorage(thisPartido);
+  });
+
+  inputB.addEventListener("change", function (e) {
+    let marcador_A = inputA.value || 0;
+    let marcador_B = this.value || 0;
+
+    marcador_A = Number.parseInt(marcador_A);
+    marcador_B = Number.parseInt(marcador_B);
+
+    thisPartido.jugar(grupo, marcador_A, marcador_B);
+    thisPartido.updateLocalStorage(thisPartido);
+  });
+
+  return tr;
 }
 
 Partido.prototype.ganador = function () {
@@ -71,7 +113,6 @@ Grupo.prototype.puntuar = function () {
   this.equipo4.reiniciar();
 
   this.partidos.forEach((partido) => {
-    console.log(partido);
     const equipo_ganador = partido.ganador();
     const equipo_perdedor = partido.perdedor();
     const empataron = equipo_ganador === null || equipo_perdedor === null;
@@ -115,55 +156,27 @@ Grupo.prototype.ordenar = function () {
   return equipos;
 };
 
-Partido.prototype.jugar = function (marcador_A, marcador_B, penales_A = null, penales_B = null) {
-    this.marcador_A = marcador_A;
-    this.marcador_B = marcador_B;
+Partido.prototype.jugar = function (grupo, marcador_A, marcador_B) {
   
-    if (this.grupo) {
-      if (!this.jugado) {
-        this.grupo.partidos.push(this);
-        this.jugado = true;
-      } else {
-        const thisPartido = this;
-        this.grupo.partidos.map((partido) => {
-          if (partido.id === thisPartido.id) {
-            Object.assign(partido, thisPartido);
-          }
-        });
+  this.marcador_A = marcador_A;
+  this.marcador_B = marcador_B;
+
+  if (!this.jugado) {
+    grupo.partidos.push(this);
+  } else {
+    const thisPartido = this;
+    grupo.partidos.map((partido) => {
+      if (partido.id === thisPartido.id) {
+        Object.assign(partido, thisPartido);
       }
-      this.grupo.puntuar();
-      this.grupo.ordenar();
-    } else {
-      this.jugado = true;
-      this.penales_A = penales_A;
-      this.penales_B = penales_B;
-    }
-  };
-  
-  Partido.prototype.replaceGrupo = function () {
-    this.grupo = {
-      nombre: this.grupo.nombre,
-      equipo1: this.grupo.equipo1,
-      equipo2: this.grupo.equipo2,
-      equipo3: this.grupo.equipo3,
-      equipo4: this.grupo.equipo4,
-    };
-    return this;
-  }
-
-  Grupo.prototype.reiniciarPartidos = function () {
-    this.partidos = [];
-    return this;
-  }
-
-  function deepCloneWithoutCircularReferences(grupo) {
-    const clonedGrupo = JSON.parse(JSON.stringify(grupo));
-    
-    // Remover referencias circulares en la copia clonada
-    clonedGrupo.partidos = clonedGrupo.partidos.map(partido => {
-      delete partido.grupo;
-      return partido;
     });
-  
-    return clonedGrupo;
   }
+  grupo.puntuar();
+  grupo.ordenar();
+  this.jugado = true;
+};
+
+Grupo.prototype.reiniciarPartidos = function () {
+  this.partidos = [];
+  return this;
+}
